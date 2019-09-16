@@ -214,9 +214,30 @@ data:
       <enabled>false</enabled>
 {{- end }}
     </jenkins.CLI>
+  nginx_default: |-
+    server {
+        listen 9999 default_server;
+        listen [::]:9999 default_server ipv6only=on;
+        root /var/lib/jenkins/.aptly/public;
+        index index.html index.htm;
+        server_name localhost;
+        location / {
+                try_files $uri $uri/ =404;
+        }
+    }
   apply_config.sh: |-
     mkdir -p /usr/share/jenkins/ref/secrets/;
     echo "false" > /usr/share/jenkins/ref/secrets/slave-to-master-security-kill-switch;
+    cd ~
+    wget https://dl.bintray.com/smira/aptly/0.9.5/debian-squeeze-x64/aptly
+    chmod +x aptly
+    ./aptly repo create hello
+    ./aptly publish repo -architectures="amd64" -component=main -distribution=trusty -skip-signing=true hello
+    apt-get update
+    apt-get install -y nginx vim
+    cp /var/jenkins_config/nginx_default /etc/nginx/sites-enabled/default
+    service nginx start
+    cd -
 {{- if .Values.master.overwriteConfig }}
     cp /var/jenkins_config/config.xml /var/jenkins_home;
     cp /var/jenkins_config/jenkins.CLI.xml /var/jenkins_home;

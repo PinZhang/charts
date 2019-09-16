@@ -33,6 +33,9 @@ data:
     # Spinnaker version
     $HAL_COMMAND config version edit --version {{ .Values.halyard.spinnakerVersion }}
 
+    $HAL_COMMAND config ci jenkins enable
+    echo {{ .Values.jenkins.defaultMaster.password }} | $HAL_COMMAND config ci jenkins master add my-jenkins-master --address http://my-jenkins:8080 --username spinnaker --password
+
     # Storage
     {{ if .Values.minio.enabled }}
     echo {{ .Values.minio.secretKey }} | $HAL_COMMAND config storage s3 edit --endpoint http://{{ .Release.Name }}-minio:9000 --access-key-id {{ .Values.minio.accessKey }} --secret-access-key --bucket {{ .Values.minio.bucket }}

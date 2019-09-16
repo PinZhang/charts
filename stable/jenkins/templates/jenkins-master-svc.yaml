@@ -23,6 +23,8 @@ spec:
       {{if (and (eq .Values.master.serviceType "NodePort") (not (empty .Values.master.nodePort)))}}
       nodePort: {{.Values.master.nodePort}}
       {{end}}
+    - port: 9999
+      name: nginx
   selector:
     "app.kubernetes.io/component": "{{ .Values.master.componentName }}"
     "app.kubernetes.io/instance": "{{ .Release.Name }}"

@@ -90,6 +90,7 @@ dockerRegistries:
     - library/ubuntu
     - library/centos
     - library/nginx
+    - zhangpin/spinnaker-hello
 # - name: gcr
 #   address: https://gcr.io
 #   username: _json_key
@@ -107,13 +108,13 @@ dockerRegistries:
 kubeConfig:
   # Use this when you want to register arbitrary clusters with Spinnaker
   # Upload your ~/kube/.config to a secret
-  enabled: false
+  enabled: true
   secretName: my-kubeconfig
   secretKey: config
   # List of contexts from the kubeconfig to make available to Spinnaker
   contexts:
-  - default
-  deploymentContext: default
+  - docker-desktop
+  deploymentContext: docker-desktop
   omittedNameSpaces:
   - kube-system
   - kube-public
@@ -229,3 +230,11 @@ serviceAccount:
   # If left blank it is auto-generated from the fullname of the release
   halyardName:
   spinnakerName:
+
+jenkins:
+  defaultMaster:
+    name: my-jenkins # The display name for this server
+    baseUrl: http://my-jenkins:8080
+    username: spinnaker
+    password: spinnaker
+

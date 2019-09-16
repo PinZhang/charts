@@ -191,6 +191,8 @@ spec:
               value: {{ .Values.master.sidecars.configAutoReload.folder | default "/var/jenkins_home/casc_configs" | quote }}
             {{- end }}
           ports:
+            - containerPort: 9999
+              name: nginx
             - containerPort: 8080
               name: http
             - containerPort: {{ .Values.master.slaveListenerPort }}
